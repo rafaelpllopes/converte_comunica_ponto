@@ -62,15 +62,18 @@ def coletar(nome_arquivo, nome_ponto):
 	#comunica.comunica_ponto(ultima_data_coleta('data'), '00:00', data_final_coleta, '23:59')
 	#time.sleep(30)
 	#print 'Comunicação executada com sucesso!'
-	arquivo.gera_arquivo(nome_arquivo,nome_ponto)
-	#time.sleep(10)
-	print 'Arquivo registro gerado com sucesso!'
+	if (nome_arquivo != ''):
+		arquivo.gera_arquivo(nome_arquivo,nome_ponto)
+		#time.sleep(10)
+		print 'Arquivo registro gerado com sucesso!'
+	
 	arquivo.gera_insert_de_registro_txt(nome_ponto)
 	#time.sleep(10)
 	print 'Arquivo inserte gerado com sucesso!'
 	
 	
 	with open('dbInsertRegistro.txt', 'r') as linhas:
+		print('Inserindo registros no banco de dados.')
 		for linha in linhas:
 			if (linha != ''):
 				matricula = re.search('(\d{20})', linha)
