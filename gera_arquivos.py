@@ -76,6 +76,8 @@ def verificar_numero_ponto(ponto):
 		return 179
 	elif (ponto == 'CIMENTOLANDIA'):
 		return 180
+	elif (ponto == 'MATERNO'):
+		return 181
 
 def gera_insert_de_registro_txt(ponto_nome):
 	clean_files('dbInsertRegistro.txt')
