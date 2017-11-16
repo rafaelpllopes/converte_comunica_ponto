@@ -80,6 +80,8 @@ def verificar_numero_ponto(ponto):
 		return 181
 	elif (ponto == 'CS1'):
 		return 182
+	elif (ponto == 'CENTRO_DIA'):
+		return 183
 
 def gera_insert_de_registro_txt(ponto_nome):
 	clean_files('dbInsertRegistro.txt')
