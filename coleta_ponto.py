@@ -47,8 +47,8 @@ def atualiza_ultima_coleta(inseriu_dados, data, hora):
 			print 'Ultima data atualizada com sucesso!'
 
 def coletar(nome_arquivo, nome_ponto):
-	count_inseridos = 0
-	count_existem = 0
+	count_inserts = 0
+	count_not_inserts = 0
 
 	inseriu_dados = False
 	with open("ultima_coleta.txt", "r") as file:
@@ -72,22 +72,33 @@ def coletar(nome_arquivo, nome_ponto):
 	print 'Arquivo inserte gerado com sucesso!'
 	
 	
-	with open('dbInsertRegistro.txt', 'r') as linhas:
+	with open('dbInsertRegistro.txt', 'r') as arq_db:
 		print('Inserindo registros no banco de dados.')
-		for linha in linhas:
-			if (linha != ''):
-				matricula = re.search('(\d{20})', linha)
-				registro = re.search('(\d{4}-\d{2}-\d{2}\s\d{2}:\d{2}:\d{2})', linha)
+		lista = []
+		count = 0
+		for linha in arq_db:
+			lista.append(re.split(r'\n', linha))
+		
+		tamanho_lista = len(lista)
+		print "%d a serem verificados e inseridos" % tamanho_lista
+		for item in lista:
+			count += 1
+			if (item != ''):
+				matricula = re.search('(\d{20})', item[0])
+				registro = re.search('(\d{4}-\d{2}-\d{2}\s\d{2}:\d{2}:\d{2})', item[0])
 				if(not verifica_exite(matricula.group(1), registro.group(1))):
-					sql = re.split(r'\n', linha)
+					sql = item
 					insere_dado(sql[0])
 					inseriu_dados = True
-					count_inseridos+=1
+					count_inserts+=1
 				else:
-					count_existem+=1
+					count_not_inserts+=1
 
-		print "Foram inserido(s) %d registro(s)" % count_inseridos
-		print "Registro(s) %d que ja exitem no banco de dados e não foram inseridos" % count_existem
+				current_percentual = (count*100)/tamanho_lista
+				print("{}% .................................. de {}/{}".format(round(current_percentual,2), count,tamanho_lista))
+					
+		print "Foram inserido(s) %d registro(s)" % count_inserts
+		print "Registro(s) %d que ja exitem no banco de dados e não foram inseridos" % count_not_inserts
 
 	atualiza_ultima_coleta(inseriu_dados, data_final_coleta, hora_final_coleta)
 	
