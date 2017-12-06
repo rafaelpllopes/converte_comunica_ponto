@@ -1,13 +1,50 @@
 # -*- coding: iso8859-1 -*-
 import re
 import time
+from datetime import datetime
 import sys
 import verifica_codigo_unidade as unidade
 
-def clean_files(fileName):
-	file = open(fileName, 'w')
+def clean_files(filename):
+	file = open(filename, 'w')
 	file.write('')
 	file.close()
+
+def lista_refatorada(filename, mes, ano, atual=False):
+	lista = []
+
+	if(not atual):
+		if (mes == "01"):
+			mes = "12"
+			ano = int(ano) - 1
+		else:
+			mes = int(mes) - 1
+
+	expr = '01\sN\s0\s+\d{2}\/%s\/%s\s\d{2}:\d{2}:\d{2}\s\d{20}' % (mes, ano)
+	with open(filename, 'r') as arquivo:
+		for linha in arquivo:
+			item = re.search(expr, linha)
+			if item != None:
+				lista.append(item.group()+"\r\n")
+
+	return lista
+
+def filtrar(ponto_nome):
+	filename = 'registros_{}.txt'.format(ponto_nome.lower())
+	current_month = datetime.now().strftime('%m')
+	current_year = datetime.now().strftime('%Y')
+	anterior = lista_refatorada(filename, current_month, current_year)
+	atual = lista_refatorada(filename, current_month, current_year, True)
+			
+	clean_files(filename)
+
+	with open(filename, 'a') as arquivo:
+		for item in anterior:
+			arquivo.write(item)
+
+	with open(filename, 'a') as arquivo:
+		for item in atual:
+			arquivo.write(item)
 
 def monta_insert(colaborado_matricula, data_registro, numero_ponto):
 	insert = "INSERT INTO HE22 VALUES(NULL,'%s','%s','0','0','0','2','0','4','255','1','%s','0','0','4','0','0');\n" % (numero_ponto,colaborado_matricula, data_registro);
@@ -59,6 +96,7 @@ def gera_arquivo(arquivo, ponto):
 	nome_registro_txt = 'registros_{}.txt'.format(ponto.lower()) 
 	clean_files('dbInsertRegistro.txt')
 	colaboradores = open('rep_colaborador.txt', 'r')
+	clean_files(nome_registro_txt)
 
 	for colaborador in colaboradores:
 		with open(nome_registro_txt, 'a') as registros_txt:
@@ -74,4 +112,5 @@ if __name__ == '__main__':
 	ponto_local = sys.argv[2].upper()
 	print('Gerando arquivo registro atravez do arquivo {} e para unidade {}').format(arquivo_nome, ponto_local)
 	gera_arquivo(arquivo_nome, ponto_local)
+	filtrar(ponto_local)	
 	gera_insert_de_registro_txt(ponto_local)

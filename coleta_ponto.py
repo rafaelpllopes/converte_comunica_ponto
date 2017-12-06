@@ -64,8 +64,10 @@ def coletar(nome_arquivo, nome_ponto):
 	#print 'Comunicação executada com sucesso!'
 	if (nome_arquivo != ''):
 		arquivo.gera_arquivo(nome_arquivo,nome_ponto)
-		#time.sleep(10)
 		print 'Arquivo registro gerado com sucesso!'
+		
+		arquivo.filtrar(nome_ponto)
+		print 'Arquivo filtrado para ter somente o mes atual e o anterior!'
 	
 	arquivo.gera_insert_de_registro_txt(nome_ponto)
 	#time.sleep(10)
