@@ -47,6 +47,10 @@ def verificar_numero_ponto(ponto):
 		return 185
 	elif (ponto == 'SAO_CAMILO'):
 		return 186
+	elif (ponto == 'VIRGINIA'):
+		return 187
+	elif (ponto == 'GUARI'):
+		return 188
 
 if __name__ == '__main__':
 	pass
