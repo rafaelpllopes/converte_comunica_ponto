@@ -54,14 +54,16 @@ def coletar(nome_arquivo, nome_ponto):
 	with open("ultima_coleta.txt", "r") as file:
 		ultima_data = file.readline()
 
-	data_atual = datetime.now()
+	if (nome_ponto == "SMSI"):
+		nome_arquivo = 'rep_00004002050013071.txt'
+		data_atual = datetime.now()
+		data_final_coleta = data_atual.strftime('%d/%m/%y')
+		hora_final_coleta = '%s:%02d' % (data_atual.hour, data_atual.minute)
+		hora_final_coleta = '23:59'
+		comunica.comunica_ponto(ultima_data_coleta('data'), '00:00', data_final_coleta, hora_final_coleta)
+		#time.sleep(30)
+		print 'Comunicação executada com sucesso!'
 
-	data_final_coleta = data_atual.strftime('%d/%m/%y')
-	hora_final_coleta = '%s:%02d' % (data_atual.hour, data_atual.minute)
-	hora_final_coleta = '23:59'
-	comunica.comunica_ponto(ultima_data_coleta('data'), '00:00', data_final_coleta, hora_final_coleta)
-	#time.sleep(30)
-	print 'Comunicação executada com sucesso!'
 	if (nome_arquivo != ''):
 		arquivo.gera_arquivo(nome_arquivo,nome_ponto)
 		print 'Arquivo registro gerado com sucesso!'
@@ -102,7 +104,8 @@ def coletar(nome_arquivo, nome_ponto):
 		print "Foram inserido(s) %d registro(s)" % count_inserts
 		print "Registro(s) %d que ja exitem no banco de dados e não foram inseridos" % count_not_inserts
 
-	atualiza_ultima_coleta(inseriu_dados, data_final_coleta, hora_final_coleta)
+	if (nome_ponto == "SMSI"):
+		atualiza_ultima_coleta(inseriu_dados, data_final_coleta, hora_final_coleta)
 	
 if __name__ == '__main__':
 	nome_arquivo = sys.argv[1]
