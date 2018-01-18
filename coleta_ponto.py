@@ -57,11 +57,11 @@ def coletar(nome_arquivo, nome_ponto):
 	data_atual = datetime.now()
 
 	data_final_coleta = data_atual.strftime('%d/%m/%y')
-	#hora_final_coleta = '%s:%02d' % (data_atual.hour, data_atual.minute)
+	hora_final_coleta = '%s:%02d' % (data_atual.hour, data_atual.minute)
 	hora_final_coleta = '23:59'
-	#comunica.comunica_ponto(ultima_data_coleta('data'), '00:00', data_final_coleta, '23:59')
+	comunica.comunica_ponto(ultima_data_coleta('data'), '00:00', data_final_coleta, hora_final_coleta)
 	#time.sleep(30)
-	#print 'Comunicação executada com sucesso!'
+	print 'Comunicação executada com sucesso!'
 	if (nome_arquivo != ''):
 		arquivo.gera_arquivo(nome_arquivo,nome_ponto)
 		print 'Arquivo registro gerado com sucesso!'
@@ -96,8 +96,8 @@ def coletar(nome_arquivo, nome_ponto):
 				else:
 					count_not_inserts+=1
 
-				current_percentual = (count*100)/tamanho_lista
-				print("{}% .................................. de {}/{}".format(round(current_percentual,2), count,tamanho_lista))
+				current_percentual = float(count*100)/float(tamanho_lista)
+				print("{:.1f}% .................................. de {}/{}".format(current_percentual, count,tamanho_lista))
 					
 		print "Foram inserido(s) %d registro(s)" % count_inserts
 		print "Registro(s) %d que ja exitem no banco de dados e não foram inseridos" % count_not_inserts

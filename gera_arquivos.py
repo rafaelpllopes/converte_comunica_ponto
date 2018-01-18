@@ -114,4 +114,3 @@ if __name__ == '__main__':
 	gera_arquivo(arquivo_nome, ponto_local)
 	filtrar(ponto_local)	
 	gera_insert_de_registro_txt(ponto_local)
-	
