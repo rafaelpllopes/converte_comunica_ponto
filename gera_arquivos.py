@@ -12,13 +12,13 @@ def clean_files(filename):
 
 def lista_refatorada(filename, mes, ano, atual=False):
 	lista = []
-
+	
 	if(not atual):
 		if (mes == "01"):
 			mes = "12"
 			ano = int(ano) - 1
 		else:
-			mes = int(mes) - 1
+			mes = str(int(mes) - 1).zfill(2)			
 
 	expr = '01\sN\s0\s+\d{2}\/%s\/%s\s\d{2}:\d{2}:\d{2}\s\d{20}' % (mes, ano)
 	with open(filename, 'r') as arquivo:
@@ -47,7 +47,7 @@ def filtrar(ponto_nome):
 			arquivo.write(item)
 
 def monta_insert(colaborado_matricula, data_registro, numero_ponto):
-	insert = "INSERT INTO HE22 VALUES(NULL,'%s','%s','0','0','0','2','0','4','255','1','%s','0','0','4','0','0');\n" % (numero_ponto,colaborado_matricula, data_registro);
+	insert = "INSERT INTO HE22 VALUES(NULL,'%s','%s','0','0','0','2','0','4','255','1','%s','0','0','4','0','0');\n" % (numero_ponto,colaborado_matricula, data_registro)
 	with open('dbInsertRegistro.txt','a') as insert_db:
 		insert_db.write(insert)
 
