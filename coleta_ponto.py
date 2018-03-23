@@ -1,13 +1,13 @@
 # -*- coding: UTF-8 -*-
-import firebirdsql as data_base
-import comunica_ponto as comunica
-import gera_arquivos as arquivo
-import re
-from datetime import datetime
 import time
 import sys
+import re
+from datetime import datetime
+import comunica_ponto as comunica
+import gera_arquivos as arquivo
+import DB
 
-conexao = data_base.connect(dsn='192.168.50.6:/home/henry/Henry.fdb', user='SYSDBA', password='masterkey')
+db = DB.DB()
 
 def ultima_data_coleta(opc):
 	with open("ultima_coleta.txt", "r") as file:
@@ -22,23 +22,6 @@ def ultima_data_coleta(opc):
 	elif (opc == 'hora'):
 		return data.group(4)
 
-def verifica_exite(matricula, registro):
-	sql = "SELECT * FROM HE22 WHERE HE22_ST_MATRICULA = '%s' AND HE22_DT_REGISTRO = '%s'" % (matricula, registro)
-	cursor = conexao.cursor()
-	cursor.execute(sql)
-	resultado = cursor.fetchone()
-	cursor.close()
-	existe = resultado != None
-	#if(existe):
-	#	print 'Não serei inserido!'
-	return existe
-
-def insere_dado(sql):
-	inserir = conexao.cursor()
-	inserir.execute(sql)
-	conexao.commit()
-	inserir.close()
-	#print 'Dado inserido com sucesso!'
 
 def atualiza_ultima_coleta(inseriu_dados, data, hora):
 	if (inseriu_dados):
@@ -47,8 +30,8 @@ def atualiza_ultima_coleta(inseriu_dados, data, hora):
 			print 'Ultima data atualizada com sucesso!'
 
 def coletar(nome_arquivo, nome_ponto):
-	count_inserts = 0
-	count_not_inserts = 0
+	#count_inserts = 0
+	#count_not_inserts = 0
 
 	inseriu_dados = False
 	with open("ultima_coleta.txt", "r") as file:
@@ -68,8 +51,9 @@ def coletar(nome_arquivo, nome_ponto):
 		arquivo.gera_arquivo(nome_arquivo,nome_ponto)
 		print 'Arquivo registro gerado com sucesso!'
 		
-		arquivo.filtrar(nome_ponto)
-		print 'Arquivo filtrado para ter somente o mes atual e o anterior!'
+
+	arquivo.filtrar(nome_ponto)
+	print 'Arquivo filtrado para ter somente o mes atual e o anterior!'
 	
 	arquivo.gera_insert_de_registro_txt(nome_ponto)
 	#time.sleep(10)
@@ -90,19 +74,19 @@ def coletar(nome_arquivo, nome_ponto):
 			if (item != ''):
 				matricula = re.search('(\d{20})', item[0])
 				registro = re.search('(\d{4}-\d{2}-\d{2}\s\d{2}:\d{2}:\d{2})', item[0])
-				if(not verifica_exite(matricula.group(1), registro.group(1))):
-					sql = item
-					insere_dado(sql[0])
-					inseriu_dados = True
-					count_inserts+=1
-				else:
-					count_not_inserts+=1
+				#if(not verifica_exite(matricula.group(1), registro.group(1))):
+				sql = item
+				db.inserir_registro(sql[0])
+				inseriu_dados = True
+					#count_inserts+=1
+				#else:
+					#count_not_inserts+=1
 
 				current_percentual = float(count*100)/float(tamanho_lista)
 				print("{:.1f}% .................................. de {}/{}".format(current_percentual, count,tamanho_lista))
 					
-		print "Foram inserido(s) %d registro(s)" % count_inserts
-		print "Registro(s) %d que ja exitem no banco de dados e não foram inseridos" % count_not_inserts
+		#print "Foram inserido(s) %d registro(s)" % count_inserts
+		#print "Registro(s) %d que ja exitem no banco de dados e não foram inseridos" % count_not_inserts
 
 	if (nome_ponto == "SMSI"):
 		atualiza_ultima_coleta(inseriu_dados, data_final_coleta, hora_final_coleta)
