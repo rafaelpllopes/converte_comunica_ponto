@@ -6,14 +6,13 @@ import sys
 import verifica_codigo_unidade as unidade
 import DB
 
-db = DB.DB()
-
 def clean_files(filename):
 	file = open(filename, 'w')
 	file.write('')
 	file.close()
 
 def registros_db(ponto, mes, ano):
+	db = DB.DB()
 	registros = []
 	if(mes == "02"):
 		if(int(mes) % 4 == 0):
