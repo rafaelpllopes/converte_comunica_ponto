@@ -2,10 +2,21 @@
 import sys
 import re
 from datetime import datetime
+import os.path
 import comunica_ponto as comunica
 import gera_arquivos as arquivo
 import DB
 import obter_equipamento as equipamento
+
+def verifica_arquivo(nome_arq):
+	if(os.path.isfile("AFD"+nome_arq+".txt")):
+		return "AFD"+nome_arq+".txt"
+	elif(os.path.isfile("REP"+nome_arq+".txt")):
+		return "REP"+nome_arq+".txt"
+	elif(os.path.isfile("rep_"+nome_arq+".txt")):
+		return "rep_"+nome_arq+".txt"
+	else:
+		return nome_arq+".txt"
 
 def ultima_data_coleta(opc):
 	with open("ultima_coleta.txt", "r") as file:
@@ -26,16 +37,22 @@ def atualiza_ultima_coleta(inseriu_dados, data, hora):
 		with open("ultima_coleta.txt", "w") as ultima_coleta:
 			ultima_coleta.write("%s %s" % (data, hora))
 
-def coletar(nome_arquivo, nome_ponto):
+def coletar(nome_ponto):
+	nome_arquivo = ''
 	db = DB.DB()
 	matricula = ''
 	registro = ''
 	inseriu_dados = False
+	ponto = equipamento.obter_equipamento(nome_ponto)
+
+	if(ponto.get_rep() != None):
+		nome_arquivo = verifica_arquivo(ponto.get_rep())
+		print "Lendo arquivo " + nome_arquivo 
+
 	with open("ultima_coleta.txt", "r") as file:
 		ultima_data = file.readline()
 
-	if (nome_ponto == "SMSI"):
-		nome_arquivo = 'rep_00004002050013071.txt'
+	if (ponto.get_local() == "SMSI"):
 		data_atual = datetime.now()
 		data_final_coleta = data_atual.strftime('%d/%m/%y')
 		hora_final_coleta = '%s:%02d' % (data_atual.hour, data_atual.minute)
@@ -44,7 +61,7 @@ def coletar(nome_arquivo, nome_ponto):
 		print 'Comunicação executada com sucesso!'
 
 	if (nome_arquivo != ''):
-		arquivo.gera_arquivo(nome_arquivo,nome_ponto)
+		arquivo.gera_arquivo(nome_arquivo, nome_ponto)
 		print 'Arquivo registro gerado com sucesso!'
 		
 	print 'Filtrando e verificando no banco de dados'
@@ -83,6 +100,5 @@ def coletar(nome_arquivo, nome_ponto):
 			print "Não ha dados para serem inseridos"
 	
 if __name__ == '__main__':
-	nome_arquivo = sys.argv[1]
-	nome_ponto = sys.argv[2].upper()
-	coletar(nome_arquivo, nome_ponto)
+	nome_ponto = sys.argv[1].upper()
+	coletar(nome_ponto)
