@@ -45,10 +45,6 @@ def coletar(nome_ponto):
 	inseriu_dados = False
 	ponto = equipamento.obter_equipamento(nome_ponto)
 
-	if(ponto.get_rep() != None):
-		nome_arquivo = verifica_arquivo(ponto.get_rep())
-		print "Lendo arquivo " + nome_arquivo 
-
 	with open("ultima_coleta.txt", "r") as file:
 		ultima_data = file.readline()
 
@@ -59,6 +55,10 @@ def coletar(nome_ponto):
 		hora_final_coleta = '23:59'
 		comunica.comunica_ponto(ultima_data_coleta('data'), '00:00', data_final_coleta, hora_final_coleta)
 		print 'Comunicação executada com sucesso!'
+	
+	if(ponto.get_rep() != None):
+		nome_arquivo = verifica_arquivo(ponto.get_rep())
+		print "Lendo arquivo " + nome_arquivo 
 
 	if (nome_arquivo != ''):
 		arquivo.gera_arquivo(nome_arquivo, nome_ponto)
