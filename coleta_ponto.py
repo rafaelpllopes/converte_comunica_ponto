@@ -98,6 +98,9 @@ def coletar(nome_ponto):
 				print 'Ultima data atualizada com sucesso!'
 		else:
 			print "Não ha dados para serem inseridos"
+		
+		if(nome_arquivo != ''):
+			os.remove(nome_arquivo)
 	
 if __name__ == '__main__':
 	nome_ponto = sys.argv[1].upper()
