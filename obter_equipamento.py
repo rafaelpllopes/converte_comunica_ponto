@@ -20,7 +20,7 @@ def obter_equipamento(local):
     elif (local == 'SAO_JORGE'):
 		equipamento = Ponto.Ponto(local, 144)
     elif (local == 'SAMU'):
-		equipamento = Ponto.Ponto(local, 147)
+		equipamento = Ponto.Ponto(local, 147, '00004004330013080')
     elif (local == 'UPA'):
 		equipamento = Ponto.Ponto(local, 169, '00004004330016111')
     elif (local == 'MARIANA'):
@@ -34,36 +34,36 @@ def obter_equipamento(local):
     elif (local == 'APARECIDA'):
 		equipamento = Ponto.Ponto(local, 178)
     elif (local == 'BOM_JESUS'):
-		equipamento = Ponto.Ponto(local, 179)
+		equipamento = Ponto.Ponto(local, 179, '00004004330005193')
     elif (local == 'CIMENTOLANDIA'):
 		equipamento = Ponto.Ponto(local, 180)
     elif (local == 'MATERNO'):
-		equipamento = Ponto.Ponto(local, 181)
+		equipamento = Ponto.Ponto(local, 181, '00004004330005988')
     elif (local == 'CS1'):
 		equipamento = Ponto.Ponto(local, 182, '00004004330006302')
     elif (local == 'CENTRO_DIA'):
 		equipamento = Ponto.Ponto(local, 183)
     elif (local == 'CAMARGO'):
-		equipamento = Ponto.Ponto(local, 184)
+		equipamento = Ponto.Ponto(local, 184, '00004004330006955')
     elif (local == 'SAO_ROQUE'):
 		equipamento = Ponto.Ponto(local, 185)
     elif (local == 'SAO_CAMILO'):
-		equipamento = Ponto.Ponto(local, 186)
+		equipamento = Ponto.Ponto(local, 186, '00004004330004389')
     elif (local == 'VIRGINIA'):
 		equipamento = Ponto.Ponto(local, 187, '00004004330016137')
     elif (local == 'GUARI'):
 		equipamento = Ponto.Ponto(local, 188, '00004004310000100')
     elif (local == 'SANTA_MARIA'):
-		equipamento = Ponto.Ponto(local, 189)
+		equipamento = Ponto.Ponto(local, 189, '00004004330006971')
     elif (local == 'PACOVA'):
 		equipamento = Ponto.Ponto(local, 190)
     elif (local == 'ALTO_BRANCAL'):
-		equipamento = Ponto.Ponto(local, 191)
+		equipamento = Ponto.Ponto(local, 191, '00004004330014087')
     elif (local == 'AGROVILA'):
 		equipamento = Ponto.Ponto(local, 192)
     elif (local == 'CAPUTERA'):
 		equipamento = Ponto.Ponto(local, 193)
     elif (local == 'CME'):
-		equipamento = Ponto.Ponto(local, 103)
+		equipamento = Ponto.Ponto(local, 103, '00004004330014122')
     
     return equipamento
