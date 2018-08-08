@@ -15,10 +15,7 @@ def comunica_ponto(data_inicial, hora_inicial, data_final, hora_final):
 	print '%s b' % (len(data))
 		
 	with open("rep_00004002050013071.txt", "wb") as code:
-	   	if (len(data) < 25000):
-	   		code.write(data)
-	   	else:
-	   		code.write('')
+	   	code.write(data)
 
 	file.close()
 

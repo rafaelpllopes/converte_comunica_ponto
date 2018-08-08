@@ -15,8 +15,10 @@ def verifica_arquivo(nome_arq):
 		return "REP"+nome_arq+".txt"
 	elif(os.path.isfile("rep_"+nome_arq+".txt")):
 		return "rep_"+nome_arq+".txt"
-	else:
+	elif(os.path.isfile(nome_arq+".txt")):
 		return nome_arq+".txt"
+	else:
+		return ''
 
 def ultima_data_coleta(opc):
 	with open("ultima_coleta.txt", "r") as file:
@@ -37,16 +39,13 @@ def atualiza_ultima_coleta(inseriu_dados, data, hora):
 		with open("ultima_coleta.txt", "w") as ultima_coleta:
 			ultima_coleta.write("%s %s" % (data, hora))
 
-def coletar(nome_ponto):
+def coletar_ponto(ponto):
 	nome_arquivo = ''
 	db = DB.DB()
-	matricula = ''
-	registro = ''
 	inseriu_dados = False
-	ponto = equipamento.obter_equipamento(nome_ponto)
+	nome_ponto = ponto.get_local()
 
-	with open("ultima_coleta.txt", "r") as file:
-		ultima_data = file.readline()
+	print(nome_ponto)
 
 	if (ponto.get_local() == "SMSI"):
 		data_atual = datetime.now()
@@ -57,51 +56,100 @@ def coletar(nome_ponto):
 		print 'Comunicação executada com sucesso!'
 	
 	if(ponto.get_rep() != None):
-		nome_arquivo = verifica_arquivo(ponto.get_rep())
-		print "Lendo arquivo " + nome_arquivo 
-
+		try:
+			nome_arquivo = verifica_arquivo(ponto.get_rep())
+		except IOError:
+			raise
+				
 	if (nome_arquivo != ''):
 		arquivo.gera_arquivo(nome_arquivo, nome_ponto)
 		print 'Arquivo registro gerado com sucesso!'
+		print "Lendo arquivo " + nome_arquivo
 		
-	print 'Filtrando e verificando no banco de dados'
-	arquivo.filtrar(nome_ponto)
-	print 'Arquivo filtrado e verificado no banco de dados!'
-	
-	arquivo.gera_insert_de_registro_txt(nome_ponto)
-	print 'Arquivo para inserir no banco de dados gerado com sucesso!'
-	
-	
-	with open('dbInsertRegistro.txt', 'r') as arq_db:
-		lista = []
-		count = 0
-		for linha in arq_db:
-			lista.append(re.split(r'\n', linha))
+		print 'Filtrando e verificando no banco de dados'
+		arquivo.filtrar(nome_ponto)
+		print 'Arquivo filtrado e verificado no banco de dados!'
 		
-		tamanho_lista = len(lista)
-		if(tamanho_lista > 0):
-			print('Inserindo registros no banco de dados.')
-			print "%d para serem inseridos" % tamanho_lista
-			for item in lista:
-				count += 1
-				if (item != ''):
-					matricula = re.search('(\d{20})', item[0])
-					registro = re.search('(\d{4}-\d{2}-\d{2}\s\d{2}:\d{2}:\d{2})', item[0])
-					sql = item
-					db.inserir_registro(sql[0])
-					inseriu_dados = True
-					current_percentual = float(count*100)/float(tamanho_lista)
-					print("{:.1f}% .................................. de {}/{}".format(current_percentual, count,tamanho_lista))
+		arquivo.gera_insert_de_registro_txt(nome_ponto)
+		print 'Arquivo para inserir no banco de dados gerado com sucesso!'
+		
+		
+		with open('dbInsertRegistro.txt', 'r') as arq_db:
+			lista = []
+			count = 0
+			for linha in arq_db:
+				lista.append(re.split(r'\n', linha))
+			
+			tamanho_lista = len(lista)
+			if(tamanho_lista > 0):
+				print('Inserindo registros no banco de dados.')
+				print "%d para serem inseridos" % tamanho_lista
+				for item in lista:
+					count += 1
+					if (item != ''):
+						#matricula = re.search('(\d{20})', item[0])
+						#registro = re.search('(\d{4}-\d{2}-\d{2}\s\d{2}:\d{2}:\d{2})', item[0])
+						sql = item
+						db.inserir_registro(sql[0])
+						inseriu_dados = True
+						current_percentual = float(count*100)/float(tamanho_lista)
+						print("{:.1f}% .................................. de {}/{}".format(current_percentual, count,tamanho_lista))
 
-			if (nome_ponto == "SMSI"):
-				atualiza_ultima_coleta(inseriu_dados, data_final_coleta, hora_final_coleta)
-				print 'Ultima data atualizada com sucesso!'
-		else:
-			print "Não ha dados para serem inseridos"
-		
-		if(nome_arquivo != ''):
-			os.remove(nome_arquivo)
+				if (nome_ponto == "SMSI"):
+					atualiza_ultima_coleta(inseriu_dados, data_final_coleta, hora_final_coleta)
+					print 'Ultima data atualizada com sucesso!'
+			else:
+				print "Não ha dados para serem inseridos"
+			
+			if(nome_arquivo != ''):
+				os.remove(nome_arquivo)
+
+def coletar(nome_ponto = ''):
+
+	print nome_ponto
+	
+	if(nome_ponto != ''):
+		ponto = equipamento.obter_equipamento(nome_ponto)
+		coletar_ponto(ponto)
+	else:
+		pontos = []
+		pontos.append(equipamento.obter_equipamento('SMSI'))
+		pontos.append(equipamento.obter_equipamento('FARMACIA'))
+		pontos.append(equipamento.obter_equipamento('BELA_VISTA'))
+		pontos.append(equipamento.obter_equipamento('CENTRAL_REG'))
+		pontos.append(equipamento.obter_equipamento('CEREST'))
+		pontos.append(equipamento.obter_equipamento('GRAJAU'))
+		pontos.append(equipamento.obter_equipamento('IMPERADOR'))
+		pontos.append(equipamento.obter_equipamento('MARINGA'))
+		pontos.append(equipamento.obter_equipamento('SAO_JORGE'))
+		pontos.append(equipamento.obter_equipamento('SAMU'))
+		pontos.append(equipamento.obter_equipamento('UPA'))
+		pontos.append(equipamento.obter_equipamento('MARIANA'))
+		pontos.append(equipamento.obter_equipamento('SAO_BENEDITO'))
+		pontos.append(equipamento.obter_equipamento('SAO_MIGUEL'))
+		pontos.append(equipamento.obter_equipamento('TAQUARI'))
+		pontos.append(equipamento.obter_equipamento('APARECIDA'))
+		pontos.append(equipamento.obter_equipamento('BOM_JESUS'))
+		pontos.append(equipamento.obter_equipamento('CIMENTOLANDIA'))
+		pontos.append(equipamento.obter_equipamento('MATERNO'))
+		pontos.append(equipamento.obter_equipamento('CENTRO_DIA'))		
+		pontos.append(equipamento.obter_equipamento('CAMARGO'))
+		pontos.append(equipamento.obter_equipamento('SAO_ROQUE'))
+		pontos.append(equipamento.obter_equipamento('SAO_CAMILO'))
+		pontos.append(equipamento.obter_equipamento('GUARI'))
+		pontos.append(equipamento.obter_equipamento('SANTA_MARIA'))
+		pontos.append(equipamento.obter_equipamento('PACOVA'))
+		pontos.append(equipamento.obter_equipamento('ALTO_BRANCAL'))
+		pontos.append(equipamento.obter_equipamento('AGROVILA'))
+		pontos.append(equipamento.obter_equipamento('CAPUTERA'))
+		pontos.append(equipamento.obter_equipamento('CME'))
+
+		for ponto in pontos:
+			coletar_ponto(ponto)			
 	
 if __name__ == '__main__':
-	nome_ponto = sys.argv[1].upper()
-	coletar(nome_ponto)
+	try:
+		nome_ponto = sys.argv[1].upper()
+		coletar(nome_ponto)
+	except IndexError:
+		coletar()
