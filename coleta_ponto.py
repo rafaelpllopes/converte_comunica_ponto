@@ -143,6 +143,8 @@ def coletar(nome_ponto = ''):
 		pontos.append(equipamento.obter_equipamento('AGROVILA'))
 		pontos.append(equipamento.obter_equipamento('CAPUTERA'))
 		pontos.append(equipamento.obter_equipamento('CME'))
+		pontos.append(equipamento.obter_equipamento('CS1'))
+		pontos.append(equipamento.obter_equipamento('VIRGINIA'))
 
 		for ponto in pontos:
 			coletar_ponto(ponto)			

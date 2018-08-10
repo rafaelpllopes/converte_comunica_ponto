@@ -50,9 +50,9 @@ def obter_equipamento(local):
   elif (local == 'SAO_CAMILO'):
     equipamento = Ponto.Ponto(local, 186, '00004004330004389')
   elif (local == 'VIRGINIA'):
-    equipamento = Ponto.Ponto(local, 187, '00004004330028552')
+    equipamento = Ponto.Ponto(local, 187, '00004004330016137')
   elif (local == 'GUARI'):
-    equipamento = Ponto.Ponto(local, 188, '00004004310000100')
+    equipamento = Ponto.Ponto(local, 188, '00004004330028552')
   elif (local == 'SANTA_MARIA'):
     equipamento = Ponto.Ponto(local, 189, '00004004330006971')
   elif (local == 'PACOVA'):
