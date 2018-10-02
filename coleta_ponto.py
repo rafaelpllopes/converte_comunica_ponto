@@ -45,9 +45,9 @@ def coletar_ponto(ponto):
 	inseriu_dados = False
 	nome_ponto = ponto.get_local()
 
-	print(nome_ponto)
-
-	if (ponto.get_local() == "SMSI"):
+	print(ponto.get_numero(), ponto.get_local())
+	
+	if (ponto.get_local() == "SAO_MIGUEL"):
 		data_atual = datetime.now()
 		data_final_coleta = data_atual.strftime('%d/%m/%y')
 		hora_final_coleta = '%s:%02d' % (data_atual.hour, data_atual.minute)
@@ -61,48 +61,49 @@ def coletar_ponto(ponto):
 		except IOError:
 			raise
 				
-	if (nome_arquivo != ''):
-		arquivo.gera_arquivo(nome_arquivo, nome_ponto)
-		print 'Arquivo registro gerado com sucesso!'
-		print "Lendo arquivo " + nome_arquivo
+	if (ponto.get_rep() != None):
+		if(nome_arquivo != ''):
+			arquivo.gera_arquivo(nome_arquivo, nome_ponto)
+			print 'Arquivo registro gerado com sucesso!'
+			print "Lendo arquivo " + nome_arquivo
+	
+	print 'Filtrando e verificando no banco de dados'
+	arquivo.filtrar(nome_ponto)
+	print 'Arquivo filtrado e verificado no banco de dados!'
+	
+	arquivo.gera_insert_de_registro_txt(nome_ponto)
+	print 'Arquivo para inserir no banco de dados gerado com sucesso!'
+	
+	
+	with open('dbInsertRegistro.txt', 'r') as arq_db:
+		lista = []
+		count = 0
+		for linha in arq_db:
+			lista.append(re.split(r'\n', linha))
 		
-		print 'Filtrando e verificando no banco de dados'
-		arquivo.filtrar(nome_ponto)
-		print 'Arquivo filtrado e verificado no banco de dados!'
+		tamanho_lista = len(lista)
+		if(tamanho_lista > 0):
+			print('Inserindo registros no banco de dados.')
+			print "%d para serem inseridos" % tamanho_lista
+			for item in lista:
+				count += 1
+				if (item != ''):
+					#matricula = re.search('(\d{20})', item[0])
+					#registro = re.search('(\d{4}-\d{2}-\d{2}\s\d{2}:\d{2}:\d{2})', item[0])
+					sql = item
+					db.inserir_registro(sql[0])
+					inseriu_dados = True
+					current_percentual = float(count*100)/float(tamanho_lista)
+					print("{:.1f}% .................................. de {}/{}".format(current_percentual, count,tamanho_lista))
 		
-		arquivo.gera_insert_de_registro_txt(nome_ponto)
-		print 'Arquivo para inserir no banco de dados gerado com sucesso!'
+			if (nome_ponto == "SAO_MIGUEL"):
+				atualiza_ultima_coleta(inseriu_dados, data_final_coleta, hora_final_coleta)
+				print 'Ultima data atualizada com sucesso!'
+		else:
+			print "Não ha dados para serem inseridos"
 		
-		
-		with open('dbInsertRegistro.txt', 'r') as arq_db:
-			lista = []
-			count = 0
-			for linha in arq_db:
-				lista.append(re.split(r'\n', linha))
-			
-			tamanho_lista = len(lista)
-			if(tamanho_lista > 0):
-				print('Inserindo registros no banco de dados.')
-				print "%d para serem inseridos" % tamanho_lista
-				for item in lista:
-					count += 1
-					if (item != ''):
-						#matricula = re.search('(\d{20})', item[0])
-						#registro = re.search('(\d{4}-\d{2}-\d{2}\s\d{2}:\d{2}:\d{2})', item[0])
-						sql = item
-						db.inserir_registro(sql[0])
-						inseriu_dados = True
-						current_percentual = float(count*100)/float(tamanho_lista)
-						print("{:.1f}% .................................. de {}/{}".format(current_percentual, count,tamanho_lista))
-
-				if (nome_ponto == "SMSI"):
-					atualiza_ultima_coleta(inseriu_dados, data_final_coleta, hora_final_coleta)
-					print 'Ultima data atualizada com sucesso!'
-			else:
-				print "Não ha dados para serem inseridos"
-			
-			if(nome_arquivo != ''):
-				os.remove(nome_arquivo)
+		if(nome_arquivo != ''):
+			os.remove(nome_arquivo)
 
 def coletar(nome_ponto = ''):
 
@@ -145,6 +146,8 @@ def coletar(nome_ponto = ''):
 		pontos.append(equipamento.obter_equipamento('CME'))
 		pontos.append(equipamento.obter_equipamento('CS1'))
 		pontos.append(equipamento.obter_equipamento('VIRGINIA'))
+		pontos.append(equipamento.obter_equipamento('CASA_ADOLESCENTE'))
+		pontos.append(equipamento.obter_equipamento('LABTB'))
 
 		for ponto in pontos:
 			coletar_ponto(ponto)			

@@ -7,7 +7,7 @@ def login_ponto():
 def comunica_ponto(data_inicial, hora_inicial, data_final, hora_final):
 	login_ponto()
 	print data_inicial, hora_inicial, data_final, hora_final
-	site = 'http://192.168.50.50/'
+	site = 'http://10.10.24.41/'
 	get = 'rep.html?pgCode=8&opType=5&lblId=2&visibleDiv=communication&lblNsrI=000000001&lblNsrF=000092486&lblDataI=%s+%s&lblDataF=%s+%s' % (data_inicial, hora_inicial, data_final, hora_final)
 	url = site+get
 	file = urllib2.urlopen(url)

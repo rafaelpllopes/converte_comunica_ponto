@@ -111,7 +111,7 @@ def monta_linhas(pis, matricula, arquivo_nome, ponto):
 
 	resultados = []
 	for registro in arquivo:
-		if(ponto == 'SMSI'):
+		if(ponto == 'SAO_MIGUEL'):
 			reg = re.search('(?:\d{10})(\d{2})(\d{2})(\d{4})(\d{2})(\d{2})(\d{12})', registro.replace('\n',''))
 		else:
 			reg = re.search('(?:\d{10})(\d{2})(\d{2})(\d{4})(\d{2})(\d{2})(\d{12})(?:.{4})', registro.replace('\n',''))

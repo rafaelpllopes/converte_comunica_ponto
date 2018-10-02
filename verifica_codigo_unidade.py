@@ -63,6 +63,10 @@ def verificar_numero_ponto(ponto):
 		return 193
 	elif (ponto == 'CME'):
 		return 194
+	elif (ponto == 'CASA_ADOLESCENTE'):
+		return 200
+	elif (ponto == 'LABTB'):
+		return 195
 		
 if __name__ == '__main__':
 	pass
