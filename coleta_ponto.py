@@ -3,7 +3,7 @@ import sys
 import re
 from datetime import datetime
 import os.path
-import comunica_ponto as comunica
+#import comunica_ponto as comunica
 import gera_arquivos as arquivo
 import DB
 import obter_equipamento as equipamento
@@ -47,13 +47,13 @@ def coletar_ponto(ponto):
 
 	print(ponto.get_numero(), ponto.get_local())
 	
-	if (ponto.get_local() == "SAO_MIGUEL"):
-		data_atual = datetime.now()
-		data_final_coleta = data_atual.strftime('%d/%m/%y')
-		hora_final_coleta = '%s:%02d' % (data_atual.hour, data_atual.minute)
-		hora_final_coleta = '23:59'
-		comunica.comunica_ponto(ultima_data_coleta('data'), '00:00', data_final_coleta, hora_final_coleta)
-		print 'Comunicação executada com sucesso!'
+	#if (ponto.get_local() == "SAO_MIGUEL"):
+	#	data_atual = datetime.now()
+	#	data_final_coleta = data_atual.strftime('%d/%m/%y')
+	#	hora_final_coleta = '%s:%02d' % (data_atual.hour, data_atual.minute)
+	#	hora_final_coleta = '23:59'
+	#	comunica.comunica_ponto(ultima_data_coleta('data'), '00:00', data_final_coleta, hora_final_coleta)
+	#	print('Comunicação executada com sucesso!')
 	
 	if(ponto.get_rep() != None):
 		try:
@@ -64,15 +64,15 @@ def coletar_ponto(ponto):
 	if (ponto.get_rep() != None):
 		if(nome_arquivo != ''):
 			arquivo.gera_arquivo(nome_arquivo, nome_ponto)
-			print 'Arquivo registro gerado com sucesso!'
-			print "Lendo arquivo " + nome_arquivo
+			print('Arquivo registro gerado com sucesso!')
+			print("Lendo arquivo " + nome_arquivo)
 	
-	print 'Filtrando e verificando no banco de dados'
+	print('Filtrando e verificando no banco de dados')
 	arquivo.filtrar(nome_ponto)
-	print 'Arquivo filtrado e verificado no banco de dados!'
+	print('Arquivo filtrado e verificado no banco de dados!')
 	
 	arquivo.gera_insert_de_registro_txt(nome_ponto)
-	print 'Arquivo para inserir no banco de dados gerado com sucesso!'
+	print('Arquivo para inserir no banco de dados gerado com sucesso!')
 	
 	
 	with open('dbInsertRegistro.txt', 'r') as arq_db:
@@ -84,7 +84,7 @@ def coletar_ponto(ponto):
 		tamanho_lista = len(lista)
 		if(tamanho_lista > 0):
 			print('Inserindo registros no banco de dados.')
-			print "%d para serem inseridos" % tamanho_lista
+			print("%d para serem inseridos" % tamanho_lista)
 			for item in lista:
 				count += 1
 				if (item != ''):
@@ -98,16 +98,16 @@ def coletar_ponto(ponto):
 		
 			if (nome_ponto == "SAO_MIGUEL"):
 				atualiza_ultima_coleta(inseriu_dados, data_final_coleta, hora_final_coleta)
-				print 'Ultima data atualizada com sucesso!'
+				print('Ultima data atualizada com sucesso!')
 		else:
-			print "Não ha dados para serem inseridos"
+			print("Não ha dados para serem inseridos")
 		
 		if(nome_arquivo != ''):
 			os.remove(nome_arquivo)
 
 def coletar(nome_ponto = ''):
 
-	print nome_ponto
+	print(nome_ponto)
 	
 	if(nome_ponto != ''):
 		ponto = equipamento.obter_equipamento(nome_ponto)
