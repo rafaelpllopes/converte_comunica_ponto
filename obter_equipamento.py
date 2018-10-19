@@ -26,11 +26,11 @@ def obter_equipamento(local):
   elif (local == 'MARIANA'):
     equipamento = Ponto.Ponto(local, 158)
   elif (local == 'SAO_BENEDITO'):
-    equipamento = Ponto.Ponto(local, 150)
+    equipamento = Ponto.Ponto(local, 150, '00004004330035064')
   elif (local == 'SAO_MIGUEL'):
     equipamento = Ponto.Ponto(local, 148, '00004002050013071')
   elif (local == 'TAQUARI'):
-    equipamento = Ponto.Ponto(local, 155)
+    equipamento = Ponto.Ponto(local, 155, '00004004330035144')
   elif (local == 'APARECIDA'):
     equipamento = Ponto.Ponto(local, 178)
   elif (local == 'BOM_JESUS'):

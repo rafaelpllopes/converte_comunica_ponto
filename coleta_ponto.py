@@ -96,9 +96,9 @@ def coletar_ponto(ponto):
 					current_percentual = float(count*100)/float(tamanho_lista)
 					print("{:.1f}% .................................. de {}/{}".format(current_percentual, count,tamanho_lista))
 		
-			if (nome_ponto == "SAO_MIGUEL"):
-				atualiza_ultima_coleta(inseriu_dados, data_final_coleta, hora_final_coleta)
-				print('Ultima data atualizada com sucesso!')
+			#if (nome_ponto == "SAO_MIGUEL"):
+			#	atualiza_ultima_coleta(inseriu_dados, data_final_coleta, hora_final_coleta)
+			#	print('Ultima data atualizada com sucesso!')
 		else:
 			print("Não ha dados para serem inseridos")
 		
